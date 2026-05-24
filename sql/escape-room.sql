@@ -44,11 +44,16 @@ INSERT INTO `questions` (`id`, `question`, `answer`, `hint`, `roomId`) VALUES
 (2, 'Wat wordt natter terwijl het droogt?', 'Handdoek', 'Je gebruikt het na douchen.', 1),
 (3, 'Ik heb een gezicht en twee handen maar geen armen of benen. Wat ben ik?', 'Klok', 'Het geeft de tijd aan.', 1);
 
+
+-- Vragen voor Kamer 2 (Student B)
+INSERT INTO `questions` (`id`, `question`, `answer`, `hint`, `roomId`) VALUES
+(4, 'Ik heb steden, maar geen huizen. Ik heb bergen, maar geen bomen. Ik heb water, maar geen vis. Wat ben ik?', 'Kaart', 'Je gebruikt me om de weg te vinden.', 2),
+(5, 'Hoe meer je wegneemt, hoe groter het wordt. Wat is het?', 'Gat', 'Denk aan graven in de grond.', 2),
+(6, 'Wat kan je vullen met water, maar zit vol gaten?', 'Spons', 'Je gebruikt het om af te wassen.', 2);
 --
 -- Indexen voor geëxporteerde tabellen
 --
 
---
 -- Indexen voor tabel `questions`
 --
 ALTER TABLE `questions`
@@ -62,7 +67,7 @@ ALTER TABLE `questions`
 -- AUTO_INCREMENT voor een tabel `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -11,6 +11,15 @@
 
 <body>
 
+
+
+<div class="admin-btn">
+  <button>
+    <a href="./admin/admin.php">Admin inloggen</a>
+  </button>
+</div>
+
+
   <h1>Welkom</h1>
 
   <p>
@@ -34,6 +43,7 @@
   <button>
     <a href="./rooms/room_2.php">Klik hier voor een demonstratie van kamer 2</a>
   </button>
+  
 
 
 </body>

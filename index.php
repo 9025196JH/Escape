@@ -1,5 +1,6 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 
 <head>
   <meta charset="UTF-8">
@@ -10,14 +11,40 @@
 
 <body>
 
+
+
+<div class="admin-btn">
+  <button>
+    <a href="./admin/admin.php">Admin inloggen</a>
+  </button>
+</div>
+
+
   <h1>Welkom</h1>
-  <p>De button hieronder is alleen voor testdoeleinden bij het opstarten van het project. Deze pagina is bedoeld voor de
-    uitleg van jullie escape room.</p>
-  <p>Via deze pagina gaat een team naar de aanmeldpagina</p>
 
+  <p>
+    Jullie zijn opgesloten in een geheim laboratorium waar een experiment fout is gegaan.
+    De wetenschappers zijn verdwenen en de deuren zijn automatisch op slot gegaan.
+  </p>
 
-  <button><a href="./rooms/room_1.php">Klik hier voor een demonstratie van kamer
-      1</a></button>
+  <p>
+    Om te ontsnappen moeten jullie puzzels oplossen en de juiste codes vinden.
+    In elke kamer wachten nieuwe raadsels die jullie stap voor stap dichter bij de uitgang brengen.
+  </p>
+
+  <p>
+    Wees snel, werk samen en blijf rustig... want de tijd tikt ⏳
+  </p>
+
+  <button>
+    <a href="./rooms/room_1.php">Klik hier voor een demonstratie van kamer 1</a>
+  </button>
+
+  <button>
+    <a href="./rooms/room_2.php">Klik hier voor een demonstratie van kamer 2</a>
+  </button>
+  
+
 
 </body>
 

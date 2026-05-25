@@ -120,3 +120,48 @@ button {
 }
 
 
+/* win scherm */
+
+.win-container {
+    margin-top: 100px;
+}
+
+/* Titel */
+.win-container h1 {
+    font-size: 45px;
+    color: #38bdf8;
+    text-shadow: 0 0 15px #38bdf8;
+}
+
+/* Team naam */
+.team {
+    font-size: 20px;
+    margin: 10px;
+}
+
+/* Score */
+.score {
+    font-size: 25px;
+    color: #22c55e;
+    text-shadow: 0 0 10px #22c55e;
+    margin: 15px;
+}
+
+/* Button */
+.win-container button {
+    background-color: #38bdf8;
+    color: black;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.win-container button:hover {
+    background-color: #0ea5e9;
+}
+
+
+

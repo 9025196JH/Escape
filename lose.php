@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 <?php session_start(); 
  // Bashar ?>
+=======
+<?php session_start(); ?>
+>>>>>>> 600d3e1ecf76323ceb390e7e9ef5fde0221193ea
 <!DOCTYPE html>
 <html lang="nl">
 

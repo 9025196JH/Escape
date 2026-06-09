@@ -169,6 +169,69 @@ button {
   padding: 60px 20px;
 }
 
+
+.lose-icon {
+  font-size: 60px;
+  margin-bottom: 10px;
+}
+
+.lose-title {
+  font-size: 42px;
+  color: #ff4444;
+  margin-bottom: 10px;
+}
+
+.lose-subtitle {
+  font-size: 18px;
+  color: #aaaaaa;
+  margin-bottom: 20px;
+}
+
+.lose-team {
+  font-size: 16px;
+  color: #dddddd;
+  margin-bottom: 40px;
+}
+
+.lose-team span {
+  color: #ff6666;
+  font-weight: bold;
+}
+
+.lose-btn {
+  display: inline-block;
+  margin: 8px;
+  padding: 10px 24px;
+  background-color: #cc2222;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+.lose-btn:hover {
+  background-color: #aa1111;
+}
+
+.lose-btn-secondary {
+  display: inline-block;
+  margin: 8px;
+  padding: 10px 24px;
+  background-color: transparent;
+  border: 1px solid #555555;
+  color: #aaaaaa;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+.lose-btn-secondary:hover {
+  border-color: #aaaaaa;
+  color: white;
+}
+
+
+
 .lose-icon {
   font-size: 60px;
   margin-bottom: 10px;

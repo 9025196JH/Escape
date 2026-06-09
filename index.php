@@ -1,6 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="nl">
+  /* Jehad en Bashar*/ 
 
 <head>
   <meta charset="UTF-8">

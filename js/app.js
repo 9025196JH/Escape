@@ -56,3 +56,85 @@ function checkAnswer() {
     feedback.style.color = 'red';
   }
 }
+
+// Room 2 specifieke functies
+// Gemaakt door: Student B
+let currentQuestionIndex = null;
+
+function room2OpenModal(index) {
+  currentQuestionIndex = index;
+
+  const button = document.getElementById(`room2Box${index}`);
+
+  document.getElementById('room2QuestionTitle').innerText =
+    `Vraag ${index + 1}`;
+
+  document.getElementById('room2Riddle').innerText =
+    button.dataset.riddle;
+
+  document.getElementById('room2HintText').innerText = '';
+
+  document.getElementById('room2Answer').value = '';
+
+  document.getElementById('room2Feedback').innerText = '';
+
+  document.getElementById('room2Overlay').style.display = 'block';
+  document.getElementById('room2Modal').style.display = 'block';
+}
+
+function room2CloseModal() {
+  document.getElementById('room2Overlay').style.display = 'none';
+  document.getElementById('room2Modal').style.display = 'none';
+}
+
+function room2ShowHint() {
+  const button = document.getElementById(`room2Box${currentQuestionIndex}`);
+
+  document.getElementById('room2HintText').innerText =
+    button.dataset.hint;
+}
+
+function room2CheckAnswer() {
+  const button = document.getElementById(`room2Box${currentQuestionIndex}`);
+
+  const correctAnswer =
+    button.dataset.answer.toLowerCase().trim();
+
+  const userAnswer =
+    document.getElementById('room2Answer')
+      .value.toLowerCase().trim();
+
+  const feedback = document.getElementById('room2Feedback');
+
+  if (userAnswer === correctAnswer) {
+
+    feedback.innerText = 'Goed gedaan!';
+    feedback.style.color = 'lightgreen';
+
+    document.getElementById(`room2Check${currentQuestionIndex}`).innerText = '✔';
+
+    button.disabled = true;
+
+    let nextIndex = currentQuestionIndex + 1;
+
+    let nextButton = document.getElementById(`room2Box${nextIndex}`);
+
+    if (nextButton) {
+      nextButton.disabled = false;
+      nextButton.classList.remove('room2-box-locked');
+    } else {
+
+      setTimeout(() => {
+        window.location.href = '../win.php';
+      }, 1000);
+    }
+
+    setTimeout(() => {
+      room2CloseModal();
+    }, 800);
+
+  } else {
+    feedback.innerText = 'Fout antwoord!';
+    feedback.style.color = 'red';
+  }
+}

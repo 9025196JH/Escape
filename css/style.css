@@ -202,6 +202,7 @@ button:hover {
     background-color: #0ea5e9;
 }
 
+/* Lose Styling - Gemaakt door: Student B */
 .lose-page {
   background-color: #0d0d1a;
   color: white;
@@ -266,4 +267,227 @@ button:hover {
 .lose-btn-secondary:hover {
   border-color: #aaaaaa;
   color: white;
+}
+
+/* Room 2 Styling - Gemaakt door: Student B */
+
+/* Achtergrond instellingen */
+.room2-page {
+  font-family: Arial, sans-serif;
+  color: white;
+  background: url('../img/room2.jpg') center center / cover no-repeat fixed;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* Header Box */
+.room2-topbox {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.room2-titlebox {
+  display: inline-block;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 15px 30px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.room2-titlebox h1 {
+  margin: 0 0 10px 0;
+  font-size: 26px;
+}
+
+.room2-teamline {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  color: #b8f5ff;
+}
+
+.room2-text {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Speelveld */
+.room2-stage {
+  position: relative;
+  width: 100%;
+  min-height: 500px;
+}
+
+/* Basis Stijl voor de Knoppen */
+.room2-box {
+  position: absolute;
+  width: 120px;
+  height: 80px;
+  border: 2px solid white;
+  border-radius: 12px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 5;
+  font-size: 16px;
+  transition: all 0.2s;
+  text-shadow: 1px 1px 2px black;
+}
+
+/* Het zwarte kadertje achter de knop */
+.room2-box::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
+  background: rgb(31 145 25 / 60%);
+  border-radius: 16px;
+  z-index: -1;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 1. ACTIEVE KNOP (Box 1) */
+.room2-box:not(:disabled) {
+  background-color: #22c55e;
+  box-shadow: 0 0 20px #22c55e;
+}
+
+.room2-box:not(:disabled):hover {
+  transform: scale(1.05);
+  background-color: #16a34a;
+  box-shadow: 0 0 25px #16a34a;
+}
+
+/* 2. VERGRENDELDE KNOP (Box 2 & 3) */
+.room2-box:disabled.room2-box-locked {
+  background-color: #14532d;
+  box-shadow: none;
+  border-color: #166534;
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+
+/* 3. OPGELOSTE KNOP: Nog donkerder met vinkje */
+.room2-box:disabled:not(.room2-box-locked) {
+  background-color: #052e16;
+  box-shadow: none;
+  cursor: default;
+  border-color: #166534;
+}
+
+#room2Box0 {
+  top: 50px;
+  left: 50px;
+}
+
+#room2Box1 {
+  top: 250px;
+  left: 350px;
+}
+
+#room2Box2 {
+  top: 400px;
+  right: 80px;
+}
+
+/* Het vinkje */
+.room2-check {
+  display: block;
+  margin-top: 5px;
+  font-size: 20px;
+  color: #4ade80;
+}
+
+/* Modal (Question Box) - Terug naar de donkere stijl */
+.room2-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 20;
+}
+
+.room2-modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 30;
+  width: 90%;
+  max-width: 500px;
+  background: #152954;
+  color: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-sizing: border-box;
+  border: 1px solid #374151;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.room2-modal h2 {
+  margin-top: 0;
+  color: #ffffff;
+}
+
+.room2-modal p#room2Riddle {
+  font-size: 18px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  color: #f3f4f6;
+}
+
+.room2-modal input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #4b5563;
+  background: #1f2937;
+  color: white;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+/* Knoppen in modal */
+.room2-hint-btn {
+  background: #891818;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.room2-close-btn {
+  background: #891818;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  float: right;
+}
+
+.room2-modal button:not(.room2-hint-btn):not(.room2-close-btn) {
+  background: #4b5563;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.room2-hint-text {
+  color: #fcd34d;
+  margin-top: 10px;
+  font-style: italic;
 }

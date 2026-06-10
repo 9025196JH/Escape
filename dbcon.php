@@ -1,7 +1,7 @@
 <?php
 $server = "localhost";
 $username = "root";
-$password = "root";
+$password = "";
 $db = "escape-room";
 
 try {

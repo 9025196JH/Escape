@@ -8,7 +8,7 @@ if (!isset($_SESSION['solved'])) {
 }
 
 // timer
-$TimeLimit = isset($TimeLimit) ? $TimeLimit : 300; // 5 minuten
+$TimeLimit = isset($TimeLimit) ? $TimeLimit : 120; // 2 minuten
 $NextPage  = isset($NextPage) ? $NextPage : "room_2.php"; // Volgende kamer bij winst
 
 // databse verbinding en vragen ophalen
@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_answer'])) {
   
   <!-- De HTML code voor de timer van Student B -->
   <div id="timer" style="position: fixed; top: 20px; right: 20px; background-color: #333; color: #0f0; padding: 15px; border-radius: 10px; font-size: 24px; font-weight: bold; border: 2px solid #0f0; z-index: 9999; font-family: monospace;">
-      05:00
+      02:00
   </div>
 
   <div class="container">
@@ -145,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_answer'])) {
 
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
-            alert("De tijd is om!");
+
             window.location.href = "../lose.php";
         }
     }, 1000);

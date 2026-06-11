@@ -1,9 +1,15 @@
 <?php
+// Start de sessie
+session_start();
 include("../dbcon.php");
 
-$sql = "SELECT * FROM questions WHERE roomId = 3";
-$stmt = $db_connection->query($sql);
-$questions = $stmt->fetchAll();
+// Instellingen voor de timer (Gemaakt door Student B)
+ $TimeLimit = 120; // 2 minuten
+ $NextPage = "../win.php"; // Volgende pagina bij winst
+
+ $sql = "SELECT * FROM questions WHERE roomId = 3";
+ $stmt = $db_connection->query($sql);
+ $questions = $stmt->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -15,7 +21,9 @@ $questions = $stmt->fetchAll();
 <body>
 
 <h1>Escape Room 3</h1>
-<h2 id="timer">Tijd: 60</h2>
+
+<!-- Student B: Include de timer hier -->
+<?php include '../timer.php'; ?>
 
 <div class="container">
 

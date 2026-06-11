@@ -2,9 +2,8 @@
 // Timer Systeem
 // Gemaakt door: Student B
 
-
-// Standaard tijd instellen (5 minuten) als er niks is meegegeven
-$TimeLimit = isset($TimeLimit) ? $TimeLimit : 300;
+// Standaard tijd instellen (2 minuten) als er niks is meegegeven
+$TimeLimit = isset($TimeLimit) ? $TimeLimit : 120;
 
 // Standaard pagina instellen als er niks is meegegeven
 $NextPage = isset($NextPage) ? $NextPage : "../win.php";
@@ -12,7 +11,7 @@ $NextPage = isset($NextPage) ? $NextPage : "../win.php";
 
 <!-- De HTML code voor de timer die rechtsboven staat -->
 <div id="timer" style="position: fixed; top: 20px; right: 20px; background-color: #333; color: #0f0; padding: 15px; border-radius: 10px; font-size: 24px; font-weight: bold; border: 2px solid #0f0; z-index: 9999; font-family: monospace;">
-    05:00
+    02:00
 </div>
 
 <!-- De JavaScript code om de timer te laten lopen -->
@@ -44,7 +43,7 @@ $NextPage = isset($NextPage) ? $NextPage : "../win.php";
         // Check of de tijd op is
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
-            alert("De tijd is om!");
+
             window.location.href = "../lose.php";
         }
     }, 1000);

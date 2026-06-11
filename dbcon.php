@@ -1,6 +1,10 @@
 <?php
 $server = "localhost";
 $username = "root";
+<<<<<<< HEAD
+=======
+$password = "";
+>>>>>>> dc2e2a58b8c1d1facb239245b434a83e6aea0888
 $db = "escape-room";
 
 // Controleer of de server op een Mac (MAMP) draait

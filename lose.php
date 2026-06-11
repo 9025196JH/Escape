@@ -1,8 +1,8 @@
+<?php
+// Lose Pagina
+// Gemaakt door: Student B
 
-<?php session_start(); 
- // Bashar ?>
-=======
-<?php session_start(); ?>
+session_start(); ?>
 
 <!DOCTYPE html>
 <html lang="nl">
@@ -26,11 +26,10 @@
         <span>
             <?php echo isset($_SESSION['team_name'])
                 ? htmlspecialchars($_SESSION['team_name'])
-                : 'Onbekend'; ?>
+                : 'Gast'; ?>
         </span>
     </div>
 
-    <a href="rooms/room_1.php" class="lose-btn">🔄 Probeer opnieuw</a>
     <a href="index.php" class="lose-btn-secondary">🏠 Terug naar home</a>
 
 </body>

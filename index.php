@@ -40,6 +40,10 @@
     <a href="./rooms/room_1.php">Klik hier voor een demonstratie van kamer 1</a>
   </button>
 
+  <button>
+    <a href="./rooms/room_3.php">Klik hier voor een demonstratie van kamer 3</a>
+  </button>
+
 </body>
 
 </html>

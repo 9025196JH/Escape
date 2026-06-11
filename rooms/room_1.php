@@ -2,6 +2,9 @@
 // Start de sessie om de voortgang en teamnaam te onthouden
 session_start();
 
+// Laad de centrale databaseverbinding in
+require_once '../dbcon.php'; 
+
 // Als de voortgang nog niet bestaat, start deze op 0 opgeloste vragen
 if (!isset($_SESSION['solved'])) {
     $_SESSION['solved'] = 0;
@@ -11,18 +14,10 @@ if (!isset($_SESSION['solved'])) {
 $TimeLimit = isset($TimeLimit) ? $TimeLimit : 300; // 5 minuten
 $NextPage  = isset($NextPage) ? $NextPage : "room_2.php"; // Volgende kamer bij winst
 
-// databse verbinding en vragen ophalen
-$host     = 'localhost';
-$dbname   = 'escape-room'; // Controleer of deze naam klopt
-$username = 'root';
-$password = '';
-
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
     // Haal de vragen op uit de juiste tabel (questions) en kolom (roomId)
-    $stmt = $pdo->prepare("SELECT question, answer FROM questions WHERE roomId = 1 ORDER BY id ASC");
+    // De variabele is nu correct veranderd naar $db_connection uit dbcon.php
+    $stmt = $db_connection->prepare("SELECT question, answer FROM questions WHERE roomId = 1 ORDER BY id ASC");
     $stmt->execute();
     $riddles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
@@ -33,10 +28,7 @@ $totalQuestions = count($riddles);
 $feedback = "";
 $showModalIndex = null;
 
-
-
 // antwoord controle
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_answer'])) {
     $current_index = (int)$_POST['riddle_index'];
     $userAnswer = strtolower(trim($_POST['user_answer']));

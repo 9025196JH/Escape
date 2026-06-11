@@ -1,8 +1,14 @@
 <?php
 $server = "localhost";
 $username = "root";
-$password = "root";
 $db = "escape-room";
+
+// Controleer of de server op een Mac (MAMP) draait
+if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'mamp') !== false || PHP_OS === 'DARWIN') {
+    $password = "root"; // Wachtwoord voor MAMP (Mac)
+} else {
+    $password = "";     // Wachtwoord voor Laragon / XAMPP (Windows)
+}
 
 try {
     $db_connection = new PDO(

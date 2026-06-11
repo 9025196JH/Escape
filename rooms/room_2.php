@@ -5,8 +5,8 @@
 session_start();
 require_once '../dbcon.php';
 
-if (!isset($_SESSION['teamname'])) {
-  $_SESSION['teamname'] = 'Onbekend team';
+if (!isset($_SESSION['team_name'])) {
+  $_SESSION['team_name'] = 'Gast';
 }
 
 $questions = [];
@@ -40,7 +40,7 @@ try {
   <header class="room2-topbox">
     <div class="room2-titlebox">
       <h1>Room 2: Het geheime laboratorium</h1>
-      <p class="room2-teamline">Team: <?php echo htmlspecialchars($_SESSION['teamname']); ?></p>
+      <p class="room2-teamline">Team: <?php echo htmlspecialchars($_SESSION['team_name']); ?></p>
       <p class="room2-text">Los de vragen één voor één op. Alleen als je alles goed hebt, kom je uit de kamer.</p>
     </div>
   </header>

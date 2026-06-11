@@ -1,22 +1,21 @@
 <?php
 $server = "localhost";
 $username = "root";
-<<<<<<< HEAD
-=======
-$password = "";
->>>>>>> dc2e2a58b8c1d1facb239245b434a83e6aea0888
 $db = "escape-room";
 
 // Controleer of de server op een Mac (MAMP) draait
 if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'mamp') !== false || PHP_OS === 'DARWIN') {
-    $password = "root"; // Wachtwoord voor MAMP (Mac)
+    $password = "root"; 
+    $port = "8889"; // Standaard MySQL poort voor MAMP op Mac
 } else {
-    $password = "";     // Wachtwoord voor Laragon / XAMPP (Windows)
+    $password = "";     
+    $port = "3306"; // Standaard MySQL poort voor Laragon / XAMPP op Windows
 }
 
 try {
+    // De poort is nu dynamisch toegevoegd aan de connectiestring
     $db_connection = new PDO(
-        "mysql:host=$server;dbname=$db",
+        "mysql:host=$server;port=$port;dbname=$db",
         $username,
         $password
     );

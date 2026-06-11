@@ -3,7 +3,6 @@
 session_start();
 include("../dbcon.php");
 
-// Instellingen voor de timer (Gemaakt door Student B)
  $TimeLimit = 120; // 2 minuten
  $NextPage = "../win.php"; // Volgende pagina bij winst
 

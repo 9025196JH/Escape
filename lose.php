@@ -24,9 +24,9 @@ session_start(); ?>
     <div class="lose-team">
         Team:
         <span>
-            <?php echo isset($_SESSION['teamname'])
-                ? htmlspecialchars($_SESSION['teamname'])
-                : 'Onbekend'; ?>
+            <?php echo isset($_SESSION['team_name'])
+                ? htmlspecialchars($_SESSION['team_name'])
+                : 'Gast'; ?>
         </span>
     </div>
 

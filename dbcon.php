@@ -6,10 +6,10 @@ $db = "escape-room";
 // Controleer of de server op een Mac (MAMP) draait
 if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'mamp') !== false || PHP_OS === 'DARWIN') {
     $password = "root"; 
-    $port = "8889"; // Standaard MySQL poort voor MAMP op Mac
+    $port = "8889"; 
 } else {
     $password = "";     
-    $port = "3306"; // Standaard MySQL poort voor Laragon / XAMPP op Windows
+    $port = "3306"; 
 }
 
 try {

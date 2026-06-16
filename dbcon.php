@@ -3,24 +3,13 @@ $server = "localhost";
 $username = "root";
 $db = "escape-room";
 
-
-// Controleer of de server op een Mac (MAMP) draait
-if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'mamp') !== false || PHP_OS === 'DARWIN') {
+// Controleer het besturingssysteem (Darwin = Mac/MAMP, WINNT = Windows/XAMPP)
+if (PHP_OS === 'Darwin') {
     $password = "root"; 
     $port = "8889"; 
 } else {
     $password = "";     
     $port = "3306"; 
-
-if (PHP_OS === "Darwin") {
-    // Mac / MAMP
-    $password = "root";
-    $port = "8889";
-} else {
-    // Windows / XAMPP
-    $password = "";
-    $port = "3306";
-
 }
 
 try {

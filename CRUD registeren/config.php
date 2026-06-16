@@ -1,12 +1,12 @@
 <?php
-// auteur: Vul hier je naam in
-// functie: configuratiebestand
+// auteur: Jehad
+// functie: configuratiebestand escape room gebruikers-CRUD
 
-define("DATABASE", "fietsenmaker");
+define("DATABASE", "escape-room");
 define("SERVERNAME", "localhost");
 define("USERNAME", "root");
 define("PASSWORD", "");
 
-define("CRUD_TABLE", "fietsen");
-
+// We gebruiken deze code nu voor de gebruikers
+define("CRUD_TABLE", "users");
 ?>

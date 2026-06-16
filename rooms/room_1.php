@@ -2,6 +2,13 @@
 // Start de sessie om de voortgang en teamnaam te onthouden
 session_start();
 
+// Controleer of de gebruiker NIET is ingelogd
+if (!isset($_SESSION['user_id'])) {
+    // Stuur de gebruiker terug naar de index met een foutmelding in de URL
+    header("Location: ../index.php?error=not_logged_in");
+    exit();
+}
+
 // Laad de centrale databaseverbinding in
 require_once '../dbcon.php'; 
 

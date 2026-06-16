@@ -1,49 +1,45 @@
 <?php
-    // functie: update fiets
-    // auteur: Vul hier je naam in
+    // functie: update account/gebruiker
+    // auteur: Jouw Naam
 
     require_once('functions.php');
 
-    // Test of er op de wijzig-knop is gedrukt 
     if(isset($_POST['btn_wzg'])){
-
-        // test of update gelukt is
         if(updateRecord($_POST) == true){
-            echo "<script>alert('Fiets is gewijzigd')</script>";
+            echo "<script>alert('Account is gewijzigd')</script>";
+            echo "<script> location.replace('index.php'); </script>";
         } else {
-            echo '<script>alert("Fiets is NIET gewijzigd")</script>';
+            echo '<script>alert("Geen wijzigingen doorgevoerd")</script>';
         }
     }
 
-    // Test of id is meegegeven in de URL
     if(isset($_GET['id'])){  
-        // Haal alle info van de betreffende id $_GET['id']
         $id = $_GET['id'];
         $row = getRecord($id);
-    
 ?>
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-  <title>Wijzig Fiets</title>
+  <title>Wijzig Account</title>
 </head>
 <body>
-  <h2>Wijzig Fiets</h2>
+  <h2>Wijzig Account</h2>
   <form method="post">
-    
-    <input type="hidden" id="merk" name="id" required value="<?php echo $row['id']; ?>"><br>
-    <label for="merk">Merk:</label>
-    <input type="text" id="merk" name="merk" required value="<?php echo $row['merk']; ?>"><br>
+    <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 
-    <label for="type">Type:</label>
-    <input type="text" id="type" name="type" required value="<?php echo $row['type']; ?>"><br>
+    <label for="username">Gebruikersnaam:</label>
+    <input type="text" id="username" name="username" required value="<?php echo htmlspecialchars($row['username']); ?>"><br><br>
 
-    <label for="prijs">Prijs:</label>
-    <input type="number" id="prijs" name="prijs" required value="<?php echo $row['prijs']; ?>"><br>
+    <label for="password">Nieuw Wachtwoord (leeg laten om te behouden):</label>
+    <input type="password" id="password" name="password"><br><br>
+
+    <label for="role">Rol:</label>
+    <select id="role" name="role" required>
+        <option value="speler" <?php if($row['role'] == 'speler') echo 'selected'; ?>>Speler</option>
+        <option value="admin" <?php if($row['role'] == 'admin') echo 'selected'; ?>>Admin</option>
+    </select><br><br>
 
     <input type="submit" name="btn_wzg" value="Wijzig">
   </form>
@@ -51,7 +47,6 @@
   <a href='index.php'>Home</a>
 </body>
 </html>
-
 <?php
     } else {
         echo "Geen id opgegeven<br>";

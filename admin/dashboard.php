@@ -1,6 +1,6 @@
 <?php
 // Admin Dashboard - overzicht van alle beschikbare acties voor de admin
-// Gemaakt door: Student B (Bashar)
+// Gemaakt door: Bashar en Jehad
 // Sprint 3 - Administratief overzicht voor de admin
 
 // Start de sessie en controleer of de gebruiker een admin is
@@ -26,18 +26,24 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 <p>Kies hieronder wat je wilt doen.</p>
 
 <!-- Navigatie-menu met alle acties voor de admin -->
-<nav style="display: flex; flex-direction: column; gap: 12px; max-width: 400px; margin: 30px auto;">
+<nav style="display: flex; flex-direction: column; gap: 12px; max-width: 400px; margin: 30px auto; text-align: center;">
 
-    <!-- Sprint 3 - Student B: CRUD voor vragen (eigen taak) -->
+    <!-- Sprint 3 - Student B: CRUD voor vragen (Staat wel in de admin map) -->
     <a href="crud_vragen/index.php"
        style="background-color: #1a2234; color: #00ff66; border: 2px solid #00ff66; padding: 15px; border-radius: 8px; text-decoration: none; font-weight: bold;">
         📝 CRUD Vragen (beheer vragen, antwoorden en hints)
     </a>
 
-    <!-- Sprint 3 - CRUD voor teams (beheer teams, teamleden en scores) -->
-    <a href="crud_teams/index.php"
+    <!-- VERBETERD: Gaat eerst met ../ de admin-map uit naar de hoofdmap -->
+    <a href="../CRUD%20team/index.php"
        style="background-color: #1a2234; color: #00ff66; border: 2px solid #00ff66; padding: 15px; border-radius: 8px; text-decoration: none; font-weight: bold;">
         👥 CRUD Teams (beheer teams en teamleden)
+    </a>
+
+    <!-- VERBETERD: Gaat eerst met ../ de admin-map uit naar de hoofdmap -->
+    <a href="../CRUD%20registeren/index.php"
+       style="background-color: #1a2234; color: #00ff66; border: 2px solid #00ff66; padding: 15px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+        👤 CRUD Registraties (beheer gebruikers)
     </a>
 
     <!-- Scorepagina bekijken -->
@@ -46,13 +52,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
         🏆 Scorebord (bekijk alle eindtijden)
     </a>
 
-    <!-- Student A: CRUD voor gebruikers/registraties -->
-    <a href="../CRUD registeren/index.php"
-       style="background-color: #1a2234; color: #00ff66; border: 2px solid #00ff66; padding: 15px; border-radius: 8px; text-decoration: none; font-weight: bold;">
-        👤 CRUD Registraties (beheer gebruikers)
-    </a>
-
-    <!-- Student C: Overzicht van alle reviews -->
+    <!-- Student C: Overzicht van alle reviews (Staat in de admin map) -->
     <a href="show_all_reviews.php"
        style="background-color: #1a2234; color: #00ff66; border: 2px solid #00ff66; padding: 15px; border-radius: 8px; text-decoration: none; font-weight: bold;">
         ⭐ Alle Reviews (overzicht van feedback)

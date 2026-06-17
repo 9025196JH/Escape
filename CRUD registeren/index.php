@@ -10,7 +10,7 @@
 
     <?php
     // functie: Programma CRUD fietsen
-    // auteur: Vul hier je naam in   
+    // auteur: jehad   
 
     // Initialisatie
     include 'functions.php';

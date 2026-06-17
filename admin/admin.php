@@ -1,4 +1,6 @@
 <?php
+// jehad
+// admin
 // Start de sessie om bij te houden wie er inlogt
 session_start();
 
@@ -26,8 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btn_login'])) {
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];
 
-            // Succes! Stuur de admin door naar het overzicht (bijv. de CRUD-map of admin-omgeving)
-            header("Location: ../CRUD registeren/index.php");
+            // VERBETERD: Stuur de admin door naar het centrale dashboard
+            header("Location: dashboard.php");
             exit();
         } else {
             $foutmelding = "Onjuiste inloggegevens of je account is geen Admin.";

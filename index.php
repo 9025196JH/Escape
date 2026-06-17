@@ -23,11 +23,9 @@ if (isset($_GET['error']) && $_GET['error'] == 'not_logged_in') {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Escape Room</title>
-
   <link rel="stylesheet" href="./css/style.css">
 
   <?php if ($showPopup): ?>
-
     <script>
       alert("Je moet eerst een account registreren en inloggen voordat je de kamers kunt spelen!");
     </script>
@@ -36,31 +34,27 @@ if (isset($_GET['error']) && $_GET['error'] == 'not_logged_in') {
 
 <body>
 
-
+  <!-- Knoppen rechtsboven: Inloggen, Registreren, Team en Admin Beheer -->
   <div class="admin-btn" style="display: flex; gap: 10px; justify-content: flex-end; padding: 10px; flex-wrap: wrap;">
-    <!-- Knop voor Admin Inloggen -->
-
-  <!-- Knoppen rechtsboven: Inloggen en Registreren -->
-  <div class="admin-btn" style="display: flex; gap: 10px; justify-content: flex-end; padding: 10px;">
-    <!-- Knop voor Inloggen (zowel spelers als admins) -->
-
-    <button>
-      <a href="./login.php">Inloggen</a>
-    </button>
-
     
-
-
+    <!-- Knop voor Inloggen -->
+    <button>
+      <a href="./login.php" style="text-decoration: none; font-weight: bold;">Inloggen</a>
+    </button>
 
     <!-- Knop voor Registreren -->
     <button style="background-color: #28a745;">
       <a href="registreren.php" style="color: white; text-decoration: none; font-weight: bold;">Registreren</a>
     </button>
 
-
     <!-- Knop voor Team Aanmaken -->
     <button style="background-color: #007bff;">
       <a href="teamaanmaken.php" style="color: white; text-decoration: none; font-weight: bold;">Team Aanmaken</a>
+    </button>
+
+    <!-- NIEUW: Knop voor Admin Paneel (Linkt naar admin/admin.php) -->
+    <button style="background-color: #dc3545;">
+      <a href="admin/admin.php" style="color: white; text-decoration: none; font-weight: bold;">🔒 Admin Beheer</a>
     </button>
 
   </div>
@@ -69,7 +63,7 @@ if (isset($_GET['error']) && $_GET['error'] == 'not_logged_in') {
 
   <p>
     Jullie zijn opgesloten in een geheim laboratorium waar een experiment fout is gegaan.
-    De wetenschappers zijn verdwenen hives en de deuren zijn automatisch op slot gegaan.
+    De wetenschappers zijn verdwenen en de deuren zijn automatisch op slot gegaan.
   </p>
 
   <p>
@@ -81,8 +75,7 @@ if (isset($_GET['error']) && $_GET['error'] == 'not_logged_in') {
     Wees snel, werk samen en blijf rustig... want de tijd tikt ⏳
   </p>
 
-
-  <!-- De links sturen we nu eerst langs een controle-script of we controleren het direct in de kamer-bestanden -->
+  <!-- Demonstratie knoppen voor de kamers -->
   <div style="margin-bottom: 20px;">
     <button>
       <a href="./rooms/room_1.php">Klik hier voor een demonstratie van kamer 1</a>
@@ -103,5 +96,4 @@ if (isset($_GET['error']) && $_GET['error'] == 'not_logged_in') {
   </p>
 
 </body>
-
 </html>

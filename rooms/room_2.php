@@ -1,87 +1,231 @@
 <?php
-// Room 2
-// Gemaakt door: Student B
+// Room 2 - Het geheime laboratorium
+// Gemaakt door: Student B (Bashar)
 
+// Start de sessie om voortgang en teamnaam te onthouden
 session_start();
+
+// Controleer of de gebruiker NIET is ingelogd
+if (!isset($_SESSION['user_id'])) {
+    // Stuur de gebruiker terug naar de index met een foutmelding in de URL
+    header("Location: ../index.php?error=not_logged_in");
+    exit();
+}
+
+// Laad de centrale databaseverbinding in
 require_once '../dbcon.php';
 
+// Als de teamnaam nog niet bestaat, gebruik "Gast"
 if (!isset($_SESSION['team_name'])) {
-  $_SESSION['team_name'] = 'Gast';
+    $_SESSION['team_name'] = 'Gast';
 }
 
-$questions = [];
+// Als de voortgang nog niet bestaat, start deze op 0 opgeloste vragen
+if (!isset($_SESSION['solved'])) {
+    $_SESSION['solved'] = 0;
+}
+
+// Timer instellingen
+$TimeLimit = 120;              // 2 minuten per kamer
+$NextPage  = "room_3.php";    // Volgende kamer bij winst (Room 3 van Student C)
+
+// Sla de starttijd op in de sessie zodat win.php de eindtijd kan berekenen
+if (!isset($_SESSION['room2_start'])) {
+    $_SESSION['room2_start'] = time();
+}
 
 try {
-  $stmt = $db_connection->prepare("SELECT * FROM questions WHERE roomId = 2 ORDER BY id ASC");
-  $stmt->execute();
-  $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Haal de vragen op uit de database voor roomId = 2 (deze kamer)
+    // Inclusief hint kolom - Sprint 3: hint per vraag tonen
+    $stmt = $db_connection->prepare("SELECT question, answer, hint FROM questions WHERE roomId = 2 ORDER BY id ASC");
+    $stmt->execute();
+    $riddles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-  $questions = [];
+    die("Database fout: " . $e->getMessage());
+}
+
+$totalQuestions = count($riddles);
+$feedback = "";
+$showModalIndex = null;
+
+// Antwoord controle - wordt uitgevoerd als de speler een antwoord heeft verzonden
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_answer'])) {
+    $current_index = (int)$_POST['riddle_index'];
+    $userAnswer = strtolower(trim($_POST['user_answer']));
+    $correctAnswer = strtolower(trim($riddles[$current_index]['answer']));
+
+    // Vergelijk het antwoord van de speler met het juiste antwoord
+    if ($userAnswer === $correctAnswer) {
+        // Als de speler de huidige vraag goed heeft, ga naar de volgende
+        if ($current_index === $_SESSION['solved']) {
+            $_SESSION['solved']++;
+        }
+
+        // Als alle vragen zijn opgelost, ga naar de volgende kamer (room_3)
+        if ($_SESSION['solved'] === $totalQuestions) {
+            $_SESSION['solved'] = 0; // Reset voortgang voor een volgende keer
+            header("Location: " . $NextPage);
+            exit();
+        }
+
+        $feedback = "<p style='color: #00ff66; font-weight: bold;'>✅ Correct!</p>";
+    } else {
+        // Bij een fout antwoord blijft de modal open zodat de speler opnieuw kan proberen
+        $feedback = "<p style='color: #ff3333; font-weight: bold;'>❌ Fout antwoord, probeer het opnieuw!</p>";
+        $showModalIndex = $current_index;
+    }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="nl">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Room 2</title>
-  <link rel="stylesheet" href="../css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escape Room - Room 2</title>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 
-<body class="room2-page">
+<body>
+    <!-- Teamnaam wordt uit de sessie gehaald en op elke pagina getoond -->
+    <h1>Team: <?php echo isset($_SESSION['team_name']) ? htmlspecialchars($_SESSION['team_name']) : "Gast"; ?></h1>
+    <h2>Room 2: Het geheime laboratorium</h2>
+    <p>Los de vragen één voor één op. Alleen als je alles goed hebt, kom je uit de kamer.</p>
 
-  <?php
-  $TimeLimit = 120;
-  $NextPage = '../win.php';
-  include '../timer.php';
-  ?>
-
-  <header class="room2-topbox">
-    <div class="room2-titlebox">
-      <h1>Room 2: Het geheime laboratorium</h1>
-      <p class="room2-teamline">Team: <?php echo htmlspecialchars($_SESSION['team_name']); ?></p>
-      <p class="room2-text">Los de vragen één voor één op. Alleen als je alles goed hebt, kom je uit de kamer.</p>
+    <!-- De HTML code voor de timer van Student B -->
+    <div id="timer" style="position: fixed; top: 20px; right: 20px; background-color: #333; color: #0f0; padding: 15px; border-radius: 10px; font-size: 24px; font-weight: bold; border: 2px solid #0f0; z-index: 9999; font-family: monospace;">
+        02:00
     </div>
-  </header>
 
-  <main class="room2-stage">
-    <div class="room2-scene">
-      <?php foreach ($questions as $index => $question): ?>
-        <button
-          type="button"
-          class="room2-box <?php echo $index === 0 ? '' : 'room2-box-locked'; ?>"
-          id="room2Box<?php echo $index; ?>"
-          data-index="<?php echo $index; ?>"
-          data-riddle="<?php echo htmlspecialchars($question['question'], ENT_QUOTES); ?>"
-          data-answer="<?php echo htmlspecialchars($question['answer'], ENT_QUOTES); ?>"
-          data-hint="<?php echo htmlspecialchars($question['hint'], ENT_QUOTES); ?>"
-          <?php echo $index === 0 ? '' : 'disabled'; ?>
-          onclick="room2OpenModal(<?php echo $index; ?>)">
-          Vraag <?php echo $index + 1; ?>
-          <span class="room2-check" id="room2Check<?php echo $index; ?>"></span>
+    <div class="container">
+        <?php
+        // Loop door alle vragen en toon ze één voor één
+        // - Opgeloste vragen: groen en niet klikbaar
+        // - Huidige vraag: zichtbaar en klikbaar
+        // - Toekomstige vragen: verborgen (komen pas na het oplossen van de vorige)
+        foreach ($riddles as $index => $riddle) :
+            if ($index < $_SESSION['solved']) {
+                // Deze vraag is al goed beantwoord
+                $statusClass = 'box-correct';
+                $style = 'background-color: green; border-color: green; color: white; display: flex; cursor: default;';
+                $onclick = '';
+            } elseif ($index === $_SESSION['solved']) {
+                // Dit is de huidige vraag die de speler moet oplossen
+                $statusClass = 'box-active';
+                $style = 'display: flex;';
+                // htmlspecialchars(ENT_QUOTES) zet " om naar &quot; zodat de aanhalingstekens
+                // van json_encode niet botsen met de dubbele quotes van het onclick-attribuut.
+                // De browser decodeert &quot; weer naar " voordat JavaScript wordt uitgevoerd.
+                $onclick = "openModal({$index}, "
+                    . htmlspecialchars(json_encode($riddle['question']), ENT_QUOTES) . ", "
+                    . htmlspecialchars(json_encode($riddle['hint']), ENT_QUOTES) . ")";
+            } else {
+                // Deze vraag is nog niet beschikbaar - verberg hem
+                $statusClass = 'hidden';
+                $style = 'display: none !important;';
+                $onclick = '';
+            }
+        ?>
+            <div class="box box<?php echo $index + 1; ?> <?php echo $statusClass; ?>"
+                style="<?php echo $style; ?>"
+                onclick="<?php echo $onclick; ?>">
+                Box <?php echo $index + 1; ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- De Popup en Overlay structuur -->
+    <section class="overlay" id="overlay" onclick="closeModal()" style="<?php echo ($showModalIndex !== null) ? 'display: block;' : ''; ?>"></section>
+
+    <section class="modal" id="modal" style="<?php echo ($showModalIndex !== null) ? 'display: block;' : ''; ?>">
+        <h2>Escape Room Vraag</h2>
+        <p id="riddle"><?php echo ($showModalIndex !== null) ? htmlspecialchars($riddles[$showModalIndex]['question']) : ''; ?></p>
+
+        <!-- Hint knop - Sprint 3 functie door Student B (Bashar) -->
+        <!-- Geel gekleurd (#fcd34d) zodat het opvalt binnen het groene lab-thema -->
+        <button type="button" id="hintBtn" onclick="showHint()"
+            style="background-color: #fcd34d; color: #121824; margin: 10px 0; padding: 8px 14px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-family: 'Courier New', monospace;">
+            💡 Hint tonen
         </button>
-      <?php endforeach; ?>
-    </div>
-  </main>
+        <p id="hintText" style="color: #fcd34d; font-style: italic; min-height: 22px; margin: 8px 0; font-family: 'Courier New', monospace;"></p>
 
-  <div class="room2-overlay" id="room2Overlay" onclick="room2CloseModal()"></div>
+        <!-- Hidden veld om de hint van de huidige vraag tijdelijk op te slaan voor JavaScript -->
+        <input type="hidden" id="current_hint" value="<?php echo ($showModalIndex !== null) ? htmlspecialchars($riddles[$showModalIndex]['hint'], ENT_QUOTES) : ''; ?>">
 
-  <section class="room2-modal" id="room2Modal">
-    <h2 id="room2QuestionTitle">Vraag</h2>
-    <p id="room2Riddle"></p>
+        <form method="POST" action="">
+            <input type="hidden" id="riddle_index" name="riddle_index" value="<?php echo ($showModalIndex !== null) ? $showModalIndex : ''; ?>">
+            <input type="text" name="user_answer" id="answer" placeholder="Typ je antwoord" required autocomplete="off">
+            <br>
+            <button type="submit" name="submit_answer">Verzenden</button>
+        </form>
 
-    <button type="button" class="room2-hint-btn" onclick="room2ShowHint()" title="Hint">💡</button>
-    <p id="room2HintText" class="room2-hint-text"></p>
+        <div id="feedback"><?php echo $feedback; ?></div>
+    </section>
 
-    <input type="text" id="room2Answer" placeholder="Typ je antwoord">
-    <button type="button" onclick="room2CheckAnswer()">Controleer</button>
-    <button type="button" class="room2-close-btn" onclick="room2CloseModal()">Sluiten</button>
+    <!-- JavaScript voor de timer en de modal -->
+    <script>
+        // Timer logica - telt af van 120 seconden naar 0
+        let timeLeft = <?php echo $TimeLimit; ?>;
+        let timerElement = document.getElementById('timer');
+        let timerInterval;
 
-    <p id="room2Feedback"></p>
-  </section>
+        // Toon de tijd in mm:ss formaat
+        function updateTimerDisplay() {
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
 
-  <script src="../js/app.js"></script>
+            if (seconds < 10) {
+                seconds = "0" + seconds;
+            }
+            timerElement.innerText = minutes + ":" + seconds;
+        }
+
+        // Tel elke seconde 1 af
+        timerInterval = setInterval(function() {
+            timeLeft = timeLeft - 1;
+            updateTimerDisplay();
+
+            // Als de tijd op is, ga naar de verliespagina
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                window.location.href = "../lose.php";
+            }
+        }, 1000);
+
+        // Modal logica - opent het popup-venster met de vraag
+        function openModal(index, riddleText, hintText) {
+            document.getElementById('riddle_index').value = index;
+            document.getElementById('riddle').innerText = riddleText;
+            document.getElementById('answer').value = "";
+            document.getElementById('feedback').innerText = "";
+
+            // Reset de hint voor de nieuwe vraag
+            document.getElementById('hintText').innerText = "";
+            document.getElementById('current_hint').value = hintText;
+            document.getElementById('hintBtn').style.display = "inline-block";
+
+            document.getElementById('modal').style.display = "block";
+            document.getElementById('overlay').style.display = "block";
+        }
+
+        // Sluit het popup-venster
+        function closeModal() {
+            document.getElementById('modal').style.display = "none";
+            document.getElementById('overlay').style.display = "none";
+        }
+
+        // Hint tonen functie - Sprint 3 door Student B (Bashar)
+        // Toont de hint onder de hint-knop en verbergt daarna de knop
+        function showHint() {
+            let hint = document.getElementById('current_hint').value;
+            if (hint && hint !== "") {
+                document.getElementById('hintText').innerText = "💡 " + hint;
+                document.getElementById('hintBtn').style.display = "none";
+            }
+        }
+    </script>
+
 </body>
 
 </html>

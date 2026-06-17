@@ -1,8 +1,14 @@
 <?php
-// Lose Pagina
-// Gemaakt door: Student B
+// Lose Pagina - wordt getoond als de tijd op is
+// Gemaakt door: Student B (Bashar)
 
-session_start(); ?>
+// Start de sessie om de teamnaam te kunnen tonen
+session_start();
+
+// Reset de voortgang van de speler zodat hij opnieuw kan beginnen
+$_SESSION['solved'] = 0;
+unset($_SESSION['room2_start']);
+?>
 
 <!DOCTYPE html>
 <html lang="nl">

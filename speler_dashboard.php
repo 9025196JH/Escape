@@ -1,6 +1,6 @@
 <?php
 // Speler Dashboard - overzichtspagina voor spelers na het inloggen
-// Gemaakt door: Student B (Bashar)
+// Gemaakt door: Student B (Bashar) & Jehad (Teamaanmaken koppeling)
 
 // Start de sessie en controleer of de speler is ingelogd
 session_start();
@@ -13,8 +13,13 @@ if (!isset($_SESSION['user_id'])) {
 require_once 'dbcon.php';
 
 // Haal eventuele bestaande teamnaam op uit de database voor deze gebruiker
-// (als de speler al een team heeft aangemaakt)
-$teamNaam = isset($_SESSION['team_name']) ? $_SESSION['team_name'] : 'Gast';
+// We controleren zowel 'team_name' als 'teamname' voor de zekerheid
+$teamNaam = 'Geen team';
+if (isset($_SESSION['team_name']) && !empty($_SESSION['team_name'])) {
+    $teamNaam = $_SESSION['team_name'];
+} elseif (isset($_SESSION['teamname']) && !empty($_SESSION['teamname'])) {
+    $teamNaam = $_SESSION['teamname'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="nl">
@@ -35,33 +40,39 @@ $teamNaam = isset($_SESSION['team_name']) ? $_SESSION['team_name'] : 'Gast';
     <!-- Navigatie-menu met alle acties voor de speler -->
     <nav style="display: flex; flex-direction: column; gap: 12px; max-width: 400px; margin: 30px auto;">
 
-        <!-- Team aanmaken (als de speler nog geen team heeft) -->
-        <a href="create_team.php"
-            style="background-color: #1a2234; color: #00ff66; border: 2px solid #00ff66; padding: 15px; border-radius: 8px; text-decoration: none; font-weight: bold;">
-            👥 Team aanmaken
-        </a>
+        <!-- Team aanmaken: Linkt nu naar jouw bestand 'teamaanmaken.php' -->
+        <?php if ($teamNaam === 'Geen team'): ?>
+            <a href="teamaanmaken.php"
+                style="background-color: #1a2234; color: #00ff66; border: 2px solid #00ff66; padding: 15px; border-radius: 8px; text-decoration: none; font-weight: bold; text-align: center;">
+                👥 Team aanmaken
+            </a>
+        <?php else: ?>
+            <div style="background-color: #111a2e; color: #aaaaaa; border: 2px dashed #555; padding: 15px; border-radius: 8px; font-weight: bold; text-align: center;">
+                ✅ Je zit al in team: <?php echo htmlspecialchars($teamNaam); ?>
+            </div>
+        <?php endif; ?>
 
         <!-- Start het spel - ga naar kamer 1 -->
         <a href="rooms/room_1.php"
-            style="background-color: #1a2234; color: #00ff66; border: 2px solid #00ff66; padding: 15px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+            style="background-color: #1a2234; color: #00ff66; border: 2px solid #00ff66; padding: 15px; border-radius: 8px; text-decoration: none; font-weight: bold; text-align: center;">
             🎮 Start het spel (Kamer 1)
         </a>
 
         <!-- Bekijk de scores van alle teams -->
         <a href="scores.php"
-            style="background-color: #1a2234; color: #00ff66; border: 2px solid #00ff66; padding: 15px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+            style="background-color: #1a2234; color: #00ff66; border: 2px solid #00ff66; padding: 15px; border-radius: 8px; text-decoration: none; font-weight: bold; text-align: center;">
             🏆 Bekijk scores
         </a>
 
         <!-- Terug naar home -->
         <a href="index.php"
-            style="background-color: #1a2234; color: #00ff66; border: 2px solid #00ff66; padding: 15px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+            style="background-color: #1a2234; color: #00ff66; border: 2px solid #00ff66; padding: 15px; border-radius: 8px; text-decoration: none; font-weight: bold; text-align: center;">
             🏠 Terug naar home
         </a>
 
         <!-- Uitloggen -->
         <a href="logout.php"
-            style="background-color: #891818; color: white; border: 2px solid #ff4444; padding: 15px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+            style="background-color: #891818; color: white; border: 2px solid #ff4444; padding: 15px; border-radius: 8px; text-decoration: none; font-weight: bold; text-align: center;">
             🚪 Uitloggen
         </a>
 

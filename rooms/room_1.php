@@ -10,9 +10,9 @@ if (!isset($_SESSION['solved'])) {
     $_SESSION['solved'] = 0;
 }
 
-// 1. HAAL EERST DE RIDDLES OP (Cruciaal voor de controle hieronder!)
+// 1. HAAL DE RIDDLES EN HINTS OP (Nu inclusief 'hint' in de SELECT)
 try {
-    $stmt = $db_connection->prepare("SELECT question, answer FROM questions WHERE roomId = 1 ORDER BY id ASC");
+    $stmt = $db_connection->prepare("SELECT question, answer, hint FROM questions WHERE roomId = 1 ORDER BY id ASC");
     $stmt->execute();
     $riddles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
@@ -87,7 +87,10 @@ $NextPage  = "room_2.php";
         } elseif ($index === $_SESSION['solved']) {
             $statusClass = 'box-active';
             $style = 'display: flex;';
-            $onclick = "localOpenModal({$index}, '" . addslashes($riddle['question']) . "')";
+            // json_encode zorgt ervoor dat de tekst veilig naar JavaScript wordt gestuurd zonder te crashen op aanhalingstekens
+            $onclick = "localOpenModal({$index}, " 
+                . htmlspecialchars(json_encode($riddle['question']), ENT_QUOTES) . ", " 
+                . htmlspecialchars(json_encode($riddle['hint']), ENT_QUOTES) . ")";
         } else {
             $statusClass = 'hidden';
             $style = 'display: none !important;';
@@ -109,7 +112,17 @@ $NextPage  = "room_2.php";
     <h2>Escape Room Vraag</h2>
     <p id="riddle"><?php echo ($showModalIndex !== null) ? htmlspecialchars($riddles[$showModalIndex]['question']) : ''; ?></p>
     
-    <!-- Onsubmit haalt NU direct de actuele JavaScript timeLeft variabele op -->
+    <!-- SPRINT 3: Hint Elementen toegevoegd -->
+    <button type="button" id="hintBtn" onclick="showLocalHint()"
+        style="background-color: #fcd34d; color: #121824; margin: 10px 0; padding: 8px 14px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-family: monospace;">
+        💡 Hint tonen
+    </button>
+    <p id="hintText" style="color: #fcd34d; font-style: italic; min-height: 20px; margin: 5px 0; font-family: monospace;"></p>
+    
+    <!-- Onzichtbare opslagplek voor de JavaScript hinttekst -->
+    <input type="hidden" id="current_hint" value="<?php echo ($showModalIndex !== null) ? htmlspecialchars($riddles[$showModalIndex]['hint'], ENT_QUOTES) : ''; ?>">
+
+    <!-- Formulier stopt NU direct de actuele JavaScript timeLeft variabele in het formulier -->
     <form method="POST" action="" onsubmit="updateHiddenTime()">
         <input type="hidden" id="riddle_index" name="riddle_index" value="<?php echo ($showModalIndex !== null) ? $showModalIndex : ''; ?>">
         
@@ -136,9 +149,11 @@ $NextPage  = "room_2.php";
     }
 
     // EIGEN GEÏSOLEERDE MODAL FUNCTIES
-    function localOpenModal(index, riddleText) {
+    function localOpenModal(index, riddleText, hintText) {
         document.getElementById('riddle_index').value = index;
         document.getElementById('riddle').innerText = riddleText;
+        document.getElementById('current_hint').value = hintText; // Sla de hint tijdelijk op
+        document.getElementById('hintText').innerText = "";       // Maak oude hinttekst leeg
         document.getElementById('answer').value = "";
         document.getElementById('feedback').innerText = "";
         
@@ -146,17 +161,24 @@ $NextPage  = "room_2.php";
         document.getElementById('overlay').style.display = "block";
     }
 
+    // Sluit de popup
     function localCloseModal() {
         document.getElementById('modal').style.display = "none";
         document.getElementById('overlay').style.display = "none";
     }
 
-    // Als de kamer is gewonnen, stuur direct door en wis de sessionStorage niet
+    // Toont de opgeslagen hint in de popup
+    function showLocalHint() {
+        let hint = document.getElementById('current_hint').value;
+        document.getElementById('hintText').innerText = hint ? hint : "Geen hint beschikbaar voor deze vraag.";
+    }
+
+    // Als de kamer is gewonnen, stuur door met de reset parameter in de URL
     <?php if (isset($triggerWinJS) && $triggerWinJS === true): ?>
         if (typeof timerInterval !== 'undefined') {
             clearInterval(timerInterval); 
         }
-        window.location.href = <?php echo json_encode($NextPage); ?>;
+        window.location.href = "room_2.php?action=reset_progress";
     <?php endif; ?>
   </script>
 

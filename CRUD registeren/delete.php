@@ -1,5 +1,5 @@
 <?php
-// auteur: Vul hier je naam in
+// auteur: Jehad
 // functie: verwijder een bier op basis van de id
 include 'functions.php';
 

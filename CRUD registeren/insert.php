@@ -1,6 +1,6 @@
 <?php
     // functie: Account registreren
-    // auteur: Jouw Naam
+    // auteur: Jehad
 
     echo "<h1>Account Registreren</h1>";
     require_once('functions.php');

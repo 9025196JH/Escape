@@ -1,39 +1,22 @@
+<p>Gefeliciteerd! Jullie hebben gewonnen met nog <span id="eindtijd">00:00</span> over op de klok!</p>
 
-<?php
-session_start();
-// Jehad
-?>
-
-<!DOCTYPE html>
-<html lang="nl">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Gewonnen!</title>
-    <link rel="stylesheet" href="./css/style.css">
-</head>
-
-<body>
-
-<div class="win-container">
-    <h1>🎉 Escape Succesvol!</h1>
-
-    <p class="team">
-        Team: <?php echo isset($_SESSION['teamname']) ? $_SESSION['teamname'] : "Onbekend"; ?>
-    </p>
-
-    <p>
-        Jullie hebben het laboratorium weten te ontsnappen!
-        Alle puzzels zijn opgelost en de deuren zijn geopend 🔬
-    </p>
-
-    <p class="score">
-        Score: 100 punten
-    </p>
-
-    <button onclick="location.href='index.php'/button>
-</div>
-
-</body>
-
-</html>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let savedTime = sessionStorage.getItem('escape_room_time');
+    
+    if (savedTime) {
+        let totalSeconds = parseInt(savedTime);
+        let minutes = Math.floor(totalSeconds / 60);
+        let seconds = totalSeconds % 60;
+        
+        if (seconds < 10) {
+            seconds = "0" + seconds;
+        }
+        
+        let timeDisplay = document.getElementById('eindtijd');
+        if (timeDisplay) {
+            timeDisplay.innerText = minutes + ":" + seconds;
+        }
+    }
+});
+</script>

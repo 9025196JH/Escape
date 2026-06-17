@@ -1,9 +1,8 @@
-// Deze functie opent de modal en toont de vraag
 function openModal(index) {
   // Zoek het element met de class 'box' en het bijbehorende data-index
   let box = document.querySelector(`.box[data-index='${index}']`);
 
-  // Haal de vraag en het juiste antwoord uit de dataset van de box
+  // Haal de vraag ut het juiste antwoord uit de dataset van de box
   let riddleText = box.dataset.riddle;
   let correctAnswer = box.dataset.answer;
 
@@ -12,6 +11,11 @@ function openModal(index) {
 
   // Zet het correcte antwoord in de modal, zodat we het later kunnen vergelijken
   document.getElementById('modal').dataset.answer = correctAnswer;
+
+  // EXTRA TOEGEVOEGD: Zorg dat het verborgen PHP-veld in Kamer 1 weet welke box geklikt is!
+  if (document.getElementById('riddle_index')) {
+    document.getElementById('riddle_index').value = index;
+  }
 
   // Maak het antwoordveld leeg
   document.getElementById('answer').value = '';
@@ -123,9 +127,10 @@ function room2CheckAnswer() {
       nextButton.disabled = false;
       nextButton.classList.remove('room2-box-locked');
     } else {
-
+      // AANGEPAST: Als er geen volgende vraag is, heeft het team gewonnen.
+      // We halen de overgebleven seconden (timeLeft) op uit de timer en sturen dit mee!
       setTimeout(() => {
-        window.location.href = '../win.php';
+        window.location.href = '../win.php?time=' + timeLeft;
       }, 1000);
     }
 

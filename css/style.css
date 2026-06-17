@@ -492,3 +492,103 @@ button:hover {
   margin-top: 10px;
   font-style: italic;
 }
+
+
+
+
+/* registreren teamaanmaken*/
+
+
+.cyber-body {
+    background-color: #121824;
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.cyber-container {
+    background-color: #182232;
+    border: 2px solid #00ff66;
+    box-shadow: 0 0 20px #00ff66;
+    border-radius: 15px;
+    padding: 40px;
+    width: 400px;
+    box-sizing: border-box;
+}
+
+.cyber-container h1 {
+    color: #00ff66;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.cyber-container p {
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.cyber-form-group {
+    margin-bottom: 25px;
+}
+
+.cyber-container label {
+    color: #00ff66;
+    display: block;
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+.cyber-container input[type="text"], 
+.cyber-container input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #121824;
+    border: 2px solid #00ff66;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.cyber-container input::placeholder {
+    color: #55667e;
+}
+
+.cyber-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: #00ff66;
+    border: none;
+    border-radius: 8px;
+    color: #121824;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+.cyber-btn:hover {
+    background-color: #00cc52;
+    box-shadow: 0 0 10px #00ff66;
+}
+
+.cyber-back-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #00ff66;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.cyber-back-link:hover {
+    text-decoration: underline;
+}

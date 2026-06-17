@@ -1,6 +1,14 @@
 <?php
 // Start de sessie om te controleren of de gebruiker is ingelogd
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// TIJDELIJKE TEST-LOGICA: Zorgt ervoor dat je groepsgenoten de teamnaam ALTIJD 
+// kunnen lezen in de kamers, ook zolang de inlogpagina er nog niet is!
+if (isset($_SESSION['team_name'])) {
+    $_SESSION['teamname'] = $_SESSION['team_name'];
+}
 
 // Hier vangen we op of iemand onberechtigd op een kamer klikte (via de URL parameters)
 $showPopup = false;
@@ -28,23 +36,28 @@ if (isset($_GET['error']) && $_GET['error'] == 'not_logged_in') {
 
 <body>
 
-  <div class="admin-btn" style="display: flex; gap: 10px; justify-content: flex-end; padding: 10px;">
+  <div class="admin-btn" style="display: flex; gap: 10px; justify-content: flex-end; padding: 10px; flex-wrap: wrap;">
     <!-- Knop voor Admin Inloggen -->
     <button>
       <a href="./admin/admin.php">Admin inloggen</a>
     </button>
     
-    <!-- NIEUW: Knop voor Registreren (verwijst naar jouw insert.php) -->
+    <!-- Knop voor Registreren -->
     <button style="background-color: #28a745;">
-  <a href="registreren.php" style="color: white; text-decoration: none; font-weight: bold;">Registreren</a>
-</button>
+      <a href="registreren.php" style="color: white; text-decoration: none; font-weight: bold;">Registreren</a>
+    </button>
+
+    <!-- Knop voor Team Aanmaken -->
+    <button style="background-color: #007bff;">
+      <a href="teamaanmaken.php" style="color: white; text-decoration: none; font-weight: bold;">Team Aanmaken</a>
+    </button>
   </div>
 
   <h1>Welkom</h1>
 
   <p>
     Jullie zijn opgesloten in een geheim laboratorium waar een experiment fout is gegaan.
-    De wetenschappers zijn verdwenen en de deuren zijn automatisch op slot gegaan.
+    De wetenschappers zijn verdwenen hives en de deuren zijn automatisch op slot gegaan.
   </p>
 
   <p>
@@ -57,12 +70,19 @@ if (isset($_GET['error']) && $_GET['error'] == 'not_logged_in') {
   </p>
 
   <!-- De links sturen we nu eerst langs een controle-script of we controleren het direct in de kamer-bestanden -->
-  <button>
-    <a href="./rooms/room_1.php">Klik hier voor een demonstratie van kamer 1</a>
-  </button>
+  <div style="margin-bottom: 20px;">
+    <button>
+      <a href="./rooms/room_1.php">Klik hier voor een demonstratie van kamer 1</a>
+    </button>
 
-  <button>
-    <a href="./rooms/room_3.php">Klik hier voor een demonstratie van kamer 3</a>
+    <button>
+      <a href="./rooms/room_3.php">Klik hier voor een demonstratie van kamer 3</a>
+    </button>
+  </div>
+
+  <!-- Knop om naar het openbare Leaderboard (Scorepagina) te gaan -->
+  <button style="background-color: #ffc107;">
+    <a href="scores.php" style="color: black; text-decoration: none; font-weight: bold;">🏆 Bekijk Scorepagina (Leaderboard)</a>
   </button>
 
 </body>

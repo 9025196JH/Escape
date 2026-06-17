@@ -1,6 +1,6 @@
 <?php
 // auteur: Jehad
-// functie: algemene functies voor gebruikers-CRUD
+// functie: algemene functies voor teams
 
 include_once "config.php";
 
@@ -23,9 +23,9 @@ function connectDb(){
 
 function crudMain(){
     $txt = "
-    <h1>Beheer Accounts / Registreren</h1>
+    <h1>Beheer Teams</h1>
     <nav>
-		<a href='insert.php'>Nieuw account registreren</a>
+		<a href='insert.php'>Nieuw team toevoegen</a>
     </nav><br>";
     echo $txt;
 
@@ -33,13 +33,13 @@ function crudMain(){
     if(!empty($result)){
         printCrudTabel($result);
     } else {
-        echo "Geen gebruikers gevonden.";
+        echo "Geen teams gevonden.";
     }
 }
 
 function getData($table){
     $conn = connectDb();
-    $sql = "SELECT id, username, role FROM $table"; // Wachtwoord verbergen we in het overzicht
+    $sql = "SELECT id, team_name, end_time FROM $table";
     $query = $conn->prepare($sql);
     $query->execute();
     return $query->fetchAll();
@@ -55,21 +55,16 @@ function getRecord($id){
 
 function printCrudTabel($result){
     $table = "<table><tr>";
-    
-    // VEILIGHEID: Alleen headers pakken als er daadwerkelijk data in de tabel zit
-    if (isset($result[0])) {
-        $headers = array_keys($result[0]);
-        foreach($headers as $header){
-            $table .= "<th>" . ucfirst($header) . "</th>";   
-        }
+    $headers = array_keys($result[0]);
+    foreach($headers as $header){
+        $table .= "<th>" . ucfirst(str_replace('_', ' ', $header)) . "</th>";   
     }
-    
     $table .= "<th colspan=2>Actie</th></tr>";
 
     foreach ($result as $row) {
         $table .= "<tr>";
         foreach ($row as $cell) {
-            $table .= "<td>" . htmlspecialchars($cell) . "</td>";  
+            $table .= "<td>" . htmlspecialchars($cell ?? 'Nog bezig...') . "</td>";  
         }
         
         $table .= "<td>
@@ -90,46 +85,25 @@ function printCrudTabel($result){
 
 function insertRecord($post){
     $conn = connectDb();
-
-    // Veilig het wachtwoord versleutelen
-    $password_veilig = password_hash($post['password'], PASSWORD_DEFAULT);
-
-    $sql = "INSERT INTO " . CRUD_TABLE . " (username, password, role) VALUES (:username, :password, :role)";
+    $sql = "INSERT INTO " . CRUD_TABLE . " (team_name) VALUES (:team_name)";
     $stmt = $conn->prepare($sql);
-    
     $stmt->execute([
-        ':username' => $post['username'],
-        ':password' => $password_veilig,
-        ':role'     => $post['role']
+        ':team_name' => $post['team_name']
     ]);
-
     return ($stmt->rowCount() == 1);  
 }
 
 function updateRecord($post){
     $conn = connectDb();
+    $end_time = !empty($post['end_time']) ? $post['end_time'] : null;
 
-    // Als er een nieuw wachtwoord is ingevuld, hashen we dat. Anders behouden we het oude wachtwoord.
-    if(!empty($post['password'])){
-        $password_veilig = password_hash($post['password'], PASSWORD_DEFAULT);
-        $sql = "UPDATE " . CRUD_TABLE . " SET username = :username, password = :password, role = :role WHERE id = :id";
-        $params = [
-            ':username' => $post['username'],
-            ':password' => $password_veilig,
-            ':role'     => $post['role'],
-            ':id'       => $post['id']
-        ];
-    } else {
-        $sql = "UPDATE " . CRUD_TABLE . " SET username = :username, role = :role WHERE id = :id";
-        $params = [
-            ':username' => $post['username'],
-            ':role'     => $post['role'],
-            ':id'       => $post['id']
-        ];
-    }
-
+    $sql = "UPDATE " . CRUD_TABLE . " SET team_name = :team_name, end_time = :end_time WHERE id = :id";
     $stmt = $conn->prepare($sql);
-    $stmt->execute($params);
+    $stmt->execute([
+        ':team_name' => $post['team_name'],
+        ':end_time'  => $end_time,
+        ':id'        => $post['id']
+    ]);
     return ($stmt->rowCount() == 1);
 }
 

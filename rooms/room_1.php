@@ -2,28 +2,16 @@
 // Start de sessie om de voortgang en teamnaam te onthouden
 session_start();
 
-// Controleer of de gebruiker NIET is ingelogd
-if (!isset($_SESSION['user_id'])) {
-    // Stuur de gebruiker terug naar de index met een foutmelding in de URL
-    header("Location: ../index.php?error=not_logged_in");
-    exit();
-}
-
 // Laad de centrale databaseverbinding in
-require_once '../dbcon.php'; 
+require_once '../dbcon.php';
 
 // Als de voortgang nog niet bestaat, start deze op 0 opgeloste vragen
 if (!isset($_SESSION['solved'])) {
     $_SESSION['solved'] = 0;
 }
 
-// timer
-$TimeLimit = isset($TimeLimit) ? $TimeLimit : 120; // 2 minuten
-$NextPage  = isset($NextPage) ? $NextPage : "room_2.php"; // Volgende kamer bij winst
-
+// 1. HAAL EERST DE RIDDLES OP (Cruciaal voor de controle hieronder!)
 try {
-    // Haal de vragen op uit de juiste tabel (questions) en kolom (roomId)
-    // De variabele is nu correct veranderd naar $db_connection uit dbcon.php
     $stmt = $db_connection->prepare("SELECT question, answer FROM questions WHERE roomId = 1 ORDER BY id ASC");
     $stmt->execute();
     $riddles = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -35,33 +23,48 @@ $totalQuestions = count($riddles);
 $feedback = "";
 $showModalIndex = null;
 
-// antwoord controle
+// Antwoord controle via PHP
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_answer'])) {
-    $current_index = (int)$_POST['riddle_index'];
-    $userAnswer = strtolower(trim($_POST['user_answer']));
-    $correctAnswer = strtolower(trim($riddles[$current_index]['answer']));
+    
+    // Tijd direct bijwerken vanuit het meegestuurde formulier-veld
+    if (isset($_POST['current_time_left']) && $_POST['current_time_left'] !== '') {
+        $_SESSION['time_left'] = (int)$_POST['current_time_left'];
+    }
 
-    if ($userAnswer === $correctAnswer) {
-        if ($current_index === $_SESSION['solved']) {
-            $_SESSION['solved']++;
+    if (isset($_POST['riddle_index']) && $_POST['riddle_index'] !== '') {
+        $current_index = (int)$_POST['riddle_index'];
+        $userAnswer = strtolower(trim($_POST['user_answer']));
+        $correctAnswer = strtolower(trim($riddles[$current_index]['answer'] ?? ''));
+
+        if ($userAnswer === $correctAnswer) {
+            if ($current_index === $_SESSION['solved']) {
+                $_SESSION['solved']++;
+            }
+            
+            if ($_SESSION['solved'] === $totalQuestions) {
+                $triggerWinJS = true; 
+            } else {
+                $feedback = "<p style='color: #00ff66; font-weight: bold;'>✅ Correct!</p>";
+            }
+        } else {
+            $feedback = "<p style='color: #ff3333; font-weight: bold;'>❌ Fout antwoord, probeer het opnieuw!</p>";
+            $showModalIndex = $current_index;
         }
-        
-        if ($_SESSION['solved'] === $totalQuestions) {
-            $_SESSION['solved'] = 0; // Reset voortgang voor herstart
-            header("Location: " . $NextPage);
-            exit();
-        }
-        
-        $feedback = "<p style='color: #00ff66; font-weight: bold;'>✅ Correct!</p>";
-    } else {
-        $feedback = "<p style='color: #ff3333; font-weight: bold;'>❌ Fout antwoord, probeer het opnieuw!</p>";
-        $showModalIndex = $current_index;
     }
 }
+
+// TIMER LOGICA: Gebruik de opgeslagen sessie-tijd
+if (isset($_SESSION['time_left'])) {
+    $TimeLimit = $_SESSION['time_left'];
+} else {
+    $TimeLimit = 120; 
+}
+
+$NextPage  = "room_2.php"; 
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 
 <head>
   <meta charset="UTF-8">
@@ -71,12 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_answer'])) {
 </head>
 
 <body>
-  <h1>Team: <?php echo isset($_SESSION['team_name']) ? htmlspecialchars($_SESSION['team_name']) : "Gast"; ?></h1>
-  
-  <!-- De HTML code voor de timer van Student B -->
-  <div id="timer" style="position: fixed; top: 20px; right: 20px; background-color: #333; color: #0f0; padding: 15px; border-radius: 10px; font-size: 24px; font-weight: bold; border: 2px solid #0f0; z-index: 9999; font-family: monospace;">
-      02:00
-  </div>
+
+  <h1>Team: <?php echo isset($_SESSION['teamname']) ? htmlspecialchars($_SESSION['teamname']) : (isset($_SESSION['team_name']) ? htmlspecialchars($_SESSION['team_name']) : "Gast"); ?></h1>
 
   <div class="container">
     <?php 
@@ -88,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_answer'])) {
         } elseif ($index === $_SESSION['solved']) {
             $statusClass = 'box-active';
             $style = 'display: flex;';
-            $onclick = "openModal({$index}, '" . addslashes($riddle['question']) . "')";
+            $onclick = "localOpenModal({$index}, '" . addslashes($riddle['question']) . "')";
         } else {
             $statusClass = 'hidden';
             $style = 'display: none !important;';
@@ -104,14 +103,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_answer'])) {
   </div>
 
   <!-- De Popup en Overlay structuur -->
-  <section class="overlay" id="overlay" onclick="closeModal()" style="<?php echo ($showModalIndex !== null) ? 'display: block;' : ''; ?>"></section>
+  <section class="overlay" id="overlay" onclick="localCloseModal()" style="<?php echo ($showModalIndex !== null) ? 'display: block;' : ''; ?>"></section>
 
   <section class="modal" id="modal" style="<?php echo ($showModalIndex !== null) ? 'display: block;' : ''; ?>">
     <h2>Escape Room Vraag</h2>
     <p id="riddle"><?php echo ($showModalIndex !== null) ? htmlspecialchars($riddles[$showModalIndex]['question']) : ''; ?></p>
     
-    <form method="POST" action="">
+    <!-- Onsubmit haalt NU direct de actuele JavaScript timeLeft variabele op -->
+    <form method="POST" action="" onsubmit="updateHiddenTime()">
         <input type="hidden" id="riddle_index" name="riddle_index" value="<?php echo ($showModalIndex !== null) ? $showModalIndex : ''; ?>">
+        
+        <!-- Onzichtbaar veld voor de seconden -->
+        <input type="hidden" id="current_time_left" name="current_time_left" value="">
+        
         <input type="text" name="user_answer" id="answer" placeholder="Typ je antwoord" required autocomplete="off">
         <br>
         <button type="submit" name="submit_answer">Verzenden</button>
@@ -120,37 +124,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_answer'])) {
     <div id="feedback"><?php echo $feedback; ?></div>
   </section>
 
-  <!-- De JavaScript code van Student B + modal handlers -->
+  <!-- DE TIMER INCLUSIE -->
+  <?php include '../timer.php'; ?>
+
   <script>
-    // Timer logica
-    let timeLeft = <?php echo $TimeLimit; ?>;
-    let nextPage = "<?php echo $NextPage; ?>";
-    let timerElement = document.getElementById('timer');
-    let timerInterval;
-
-    function updateTimerDisplay() {
-        let minutes = Math.floor(timeLeft / 60);
-        let seconds = timeLeft % 60;
-
-        if (seconds < 10) {
-            seconds = "0" + seconds;
+    // Zorg dat de exacte JavaScript tijd in het formulier wordt gezet vlak voor verzenden
+    function updateHiddenTime() {
+        if (typeof timeLeft !== 'undefined') {
+            document.getElementById('current_time_left').value = timeLeft;
         }
-        timerElement.innerText = minutes + ":" + seconds;
     }
 
-    timerInterval = setInterval(function() {
-        timeLeft = timeLeft - 1;
-        updateTimerDisplay();
-
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-
-            window.location.href = "../lose.php";
-        }
-    }, 1000);
-
-    // Modal logica
-    function openModal(index, riddleText) {
+    // EIGEN GEÏSOLEERDE MODAL FUNCTIES
+    function localOpenModal(index, riddleText) {
         document.getElementById('riddle_index').value = index;
         document.getElementById('riddle').innerText = riddleText;
         document.getElementById('answer').value = "";
@@ -160,10 +146,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_answer'])) {
         document.getElementById('overlay').style.display = "block";
     }
 
-    function closeModal() {
+    function localCloseModal() {
         document.getElementById('modal').style.display = "none";
         document.getElementById('overlay').style.display = "none";
     }
+
+    // Als de kamer is gewonnen, stuur direct door en wis de sessionStorage niet
+    <?php if (isset($triggerWinJS) && $triggerWinJS === true): ?>
+        if (typeof timerInterval !== 'undefined') {
+            clearInterval(timerInterval); 
+        }
+        window.location.href = <?php echo json_encode($NextPage); ?>;
+    <?php endif; ?>
   </script>
 
 </body>

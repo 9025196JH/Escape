@@ -1,15 +1,16 @@
 <?php
-    // functie: update account/gebruiker
+    // functie: update team / score
     // auteur: Jehad
 
     require_once('functions.php');
 
     if(isset($_POST['btn_wzg'])){
         if(updateRecord($_POST) == true){
-            echo "<script>alert('Account is gewijzigd')</script>";
+            echo "<script>alert('Team is gewijzigd')</script>";
             echo "<script> location.replace('index.php'); </script>";
         } else {
             echo '<script>alert("Geen wijzigingen doorgevoerd")</script>';
+            echo "<script> location.replace('index.php'); </script>";
         }
     }
 
@@ -22,24 +23,18 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="style.css">
-  <title>Wijzig Account</title>
+  <title>Wijzig Team</title>
 </head>
 <body>
-  <h2>Wijzig Account</h2>
+  <h2>Wijzig Team</h2>
   <form method="post">
     <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 
-    <label for="username">Gebruikersnaam:</label>
-    <input type="text" id="username" name="username" required value="<?php echo htmlspecialchars($row['username']); ?>"><br><br>
+    <label for="team_name">Teamnaam:</label>
+    <input type="text" id="team_name" name="team_name" required value="<?php echo htmlspecialchars($row['team_name']); ?>"><br><br>
 
-    <label for="password">Nieuw Wachtwoord (leeg laten om te behouden):</label>
-    <input type="password" id="password" name="password"><br><br>
-
-    <label for="role">Rol:</label>
-    <select id="role" name="role" required>
-        <option value="speler" <?php if($row['role'] == 'speler') echo 'selected'; ?>>Speler</option>
-        <option value="admin" <?php if($row['role'] == 'admin') echo 'selected'; ?>>Admin</option>
-    </select><br><br>
+    <label for="end_time">Eindtijd (formaat: UU:MM:SS - leeg laten indien nog bezig):</label>
+    <input type="text" id="end_time" name="end_time" placeholder="00:15:30" value="<?php echo htmlspecialchars($row['end_time'] ?? ''); ?>"><br><br>
 
     <input type="submit" name="btn_wzg" value="Wijzig">
   </form>

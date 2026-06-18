@@ -27,8 +27,7 @@ crudMain();
 
     <br><br>
     <a href="../dashboard.php">← Admin Dashboard</a> &nbsp; | &nbsp;
-    <a href="../../index.php">Home</a> &nbsp; | &nbsp;
-    <a href="../../logout.php">Uitloggen</a>
+    <a href="../../index.php">Home</a>
 
 </body>
 

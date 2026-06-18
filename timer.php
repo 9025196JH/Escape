@@ -3,13 +3,13 @@
 // auteur: Bashar (Student B)
 
 // Voorbeeld variabelen (als deze nog niet ergens anders zijn gedefinieerd)
-if (!isset($TimeLimit)) { $TimeLimit = 120; }
+if (!isset($TimeLimit)) { $TimeLimit = 180; }
 if (!isset($NextPage)) { $NextPage = "../lose.php"; }
 ?>
 
 <!-- De HTML code voor de timer van Student B -->
 <div id="timer" style="position: fixed; top: 20px; right: 20px; background-color: #333; color: #0f0; padding: 15px; border-radius: 10px; font-size: 24px; font-weight: bold; border: 2px solid #0f0; z-index: 9999; font-family: monospace;">
-    02:00
+    03:00
 </div>
 
 <script>

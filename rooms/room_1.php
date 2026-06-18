@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_answer'])) {
 if (isset($_SESSION['time_left'])) {
     $TimeLimit = $_SESSION['time_left'];
 } else {
-    $TimeLimit = 120; 
+    $TimeLimit = 180; 
 }
 
 $NextPage  = "room_2.php"; 

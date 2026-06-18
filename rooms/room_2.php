@@ -5,10 +5,8 @@
 // Start de sessie om voortgang en teamnaam te onthouden
 session_start();
 
-// Controleer of de gebruiker NIET is ingelogd
-if (!isset($_SESSION['user_id'])) {
-    // Stuur de gebruiker terug naar de index met een foutmelding in de URL
-    header("Location: ../index.php?error=not_logged_in");
+if (!isset($_SESSION['team_name']) && !isset($_SESSION['teamname'])) {
+    header("Location: ../index.php");
     exit();
 }
 
@@ -16,9 +14,10 @@ if (!isset($_SESSION['user_id'])) {
 require_once '../dbcon.php';
 
 // Als de teamnaam nog niet bestaat, gebruik "Gast"
-if (!isset($_SESSION['team_name'])) {
-    $_SESSION['team_name'] = 'Gast';
-}
+$teamName =
+    $_SESSION['team_name']
+    ?? $_SESSION['teamname']
+    ?? 'Gast';
 
 // SLIMME RESET: Controleer of de speler nieuw binnenkomt in deze kamer
 if (!isset($_SESSION['current_room']) || $_SESSION['current_room'] !== 2) {
@@ -88,14 +87,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_answer'])) {
 </head>
 
 <body>
-    <h1>Team: <?php echo isset($_SESSION['team_name']) ? htmlspecialchars($_SESSION['team_name']) : "Gast"; ?></h1>
+    <h1>Team: <?php echo htmlspecialchars($teamName); ?></h1>
     <h2>Room 2: Het geheime laboratorium</h2>
     <p>Los de vragen één voor één op. Alleen als je alles goed hebt, kom je uit de kamer.</p>
-
-    <!-- De HTML code voor de timer van Student B -->
-    <div id="timer" style="position: fixed; top: 20px; right: 20px; background-color: #333; color: #0f0; padding: 15px; border-radius: 10px; font-size: 24px; font-weight: bold; border: 2px solid #0f0; z-index: 9999; font-family: monospace;">
-        02:00
-    </div>
 
     <div class="container">
         <?php
@@ -149,26 +143,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_answer'])) {
     </section>
 
     <script>
-        let timeLeft = <?php echo $TimeLimit; ?>;
-        let timerElement = document.getElementById('timer');
-        let timerInterval;
-
-        function updateTimerDisplay() {
-            let minutes = Math.floor(timeLeft / 60);
-            let seconds = timeLeft % 60;
-            if (seconds < 10) { seconds = "0" + seconds; }
-            timerElement.innerText = minutes + ":" + seconds;
-        }
-
-        timerInterval = setInterval(function() {
-            timeLeft = timeLeft - 1;
-            updateTimerDisplay();
-            if (timeLeft <= 0) {
-                clearInterval(timerInterval);
-                window.location.href = "../lose.php";
-            }
-        }, 1000);
-
         function openModal(index, question, hint) {
             document.getElementById('riddle_index').value = index;
             document.getElementById('riddle').innerText = question;
@@ -190,5 +164,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_answer'])) {
             document.getElementById('hintText').innerText = hint ? hint : "Geen hint beschikbaar voor deze vraag.";
         }
     </script>
+
+    <?php include '../timer.php'; ?>
 </body>
+
 </html>

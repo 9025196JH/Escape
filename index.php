@@ -1,13 +1,13 @@
 <?php
 // Start de sessie om te controleren of de gebruiker is ingelogd
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+  session_start();
 }
 
 // TIJDELIJKE TEST-LOGICA: Zorgt ervoor dat je groepsgenoten de teamnaam ALTIJD 
 // kunnen lezen in de kamers, ook zolang de inlogpagina er nog niet is!
 if (isset($_SESSION['team_name'])) {
-    $_SESSION['teamname'] = $_SESSION['team_name'];
+  $_SESSION['teamname'] = $_SESSION['team_name'];
 }
 
 // Hier vangen we op of iemand onberechtigd op een kamer klikte (via de URL parameters)
@@ -36,7 +36,7 @@ if (isset($_GET['error']) && $_GET['error'] == 'not_logged_in') {
 
   <!-- Knoppen rechtsboven: Inloggen, Registreren, Team en Admin Beheer -->
   <div class="admin-btn" style="display: flex; gap: 10px; justify-content: flex-end; padding: 10px; flex-wrap: wrap;">
-    
+
     <!-- Knop voor Inloggen -->
     <button>
       <a href="./login.php" style="text-decoration: none; font-weight: bold;">Inloggen</a>
@@ -91,9 +91,10 @@ if (isset($_GET['error']) && $_GET['error'] == 'not_logged_in') {
     <a href="scores.php" style="color: black; text-decoration: none; font-weight: bold;">🏆 Bekijk Scorepagina (Leaderboard)</a>
   </button>
 
-  <p style="color: #ce5f0a; font-size: 14px; margin-top: 30px;">
-    Maak eerst een account aan via "Registreren", of log in als je al een account hebt.
+  <p style="color: #00ff66; font-size: 17px; margin-top: 30px;">
+    Maak een account aan om je scores op te slaan. Heb je al een account? Log dan in.<br> Je kunt ook als gast spelen, maar resultaten van gasten worden niet bewaard.
   </p>
 
 </body>
+
 </html>

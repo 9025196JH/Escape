@@ -3,7 +3,7 @@
 session_start();
 include("../dbcon.php");
 
- $TimeLimit = 120; // 2 minuten
+ $TimeLimit = 130; // 3 minuten
  $NextPage = "../win.php"; // Volgende pagina bij winst
 
  $sql = "SELECT * FROM questions WHERE roomId = 3";

@@ -68,9 +68,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_answer'])) {
     }
 }
 
+
 // --- DE TIMERTIJD INSTELLEN ---
 // Als er al een tijd in het geheugen stond gebruiken we die, anders krijgt de speler 120 seconden.
 $TimeLimit = isset($_SESSION['time_left']) ? $_SESSION['time_left'] : 120;
+
+// TIMER LOGICA: Gebruik de opgeslagen sessie-tijd
+if (isset($_SESSION['time_left'])) {
+    $TimeLimit = $_SESSION['time_left'];
+} else {
+    $TimeLimit = 180; 
+}
+
+
 $NextPage  = "room_2.php"; 
 ?>
 
